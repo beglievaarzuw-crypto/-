@@ -1,0 +1,153 @@
+Шаг 1. Организуем структуру проекта:
+myproject/
+├── pkg/
+│   ├── stack/
+│   │   └── stack.go
+│   ├── queue/
+│   │   └── queue.go
+│   └── linkedlist/
+│       └── linkedlist.go
+└── main.go
+
+
+Шаг 2. Переносим структуры в соответствующие файлы:
+pkg/stack/stack.go — структура Stack;
+pkg/queue/queue.go — структура Queue;
+pkg/linkedlist/linkedlist.go — структуры LinkedList и Node.
+
+Шаг 3. Определяем пакеты в каждом файле:
+// В pkg/stack/stack.go
+package stack
+
+// В pkg/queue/queue.go
+package queue
+
+// В pkg/linkedlist/linkedlist.go
+package linkedlist
+
+
+Шаг 4. Импортируем пакеты в main.go:
+import (
+    "myproject/pkg/stack"
+    "myproject/pkg/queue"
+    "myproject/pkg/linkedlist"
+)
+
+2. Переработка функций в методы
+Преобразуем функции в методы, привязанные к структурам. Пример для стека:
+До:
+func Push(s *Stack, v int) {
+    s.items = append(s.items, v)
+}
+После:
+func (s *Stack) Push(v int) {
+    s.items = append(s.items, v)
+}
+
+3. Преобразование структур в дженерики
+Используем дженерики (Go 1.18+), чтобы структуры могли работать с любыми типами данных.
+package stack
+
+type Stack[T any] struct {
+    items []T
+}
+
+func NewStack[T any]() *Stack[T] {
+    return &Stack[T]{}
+}
+
+func (s *Stack[T]) Push(item T) {
+    s.items = append(s.items, item)
+}
+
+func (s *Stack[T]) Pop() T {
+    if len(s.items) == 0 {
+        panic("stack is empty")
+    }
+    index := len(s.items) - 1
+    item := s.items[index]
+    s.items = s.items[:index]
+    return item
+}
+
+func (s *Stack[T]) Peek() T {
+    if len(s.items) == 0 {
+        panic("stack is empty")
+    }
+    return s.items[len(s.items)-1]
+}
+
+для очереди (pkg/queue/queue.go):
+
+package queue
+
+type Queue[T any] struct {
+    items []T
+}
+
+func NewQueue[T any]() *Queue[T] {
+    return &Queue[T]{}
+}
+
+func (q *Queue[T]) Enqueue(item T) {
+    q.items = append(q.items, item)
+}
+
+func (q *Queue[T]) Dequeue() T {
+    if len(q.items) == 0 {
+        panic("queue is empty")
+    }
+    item := q.items
+    q.items = q.items[1:]
+    return item
+}
+
+4. Обновление main.go для работы с дженериками
+Используем обновлённые структуры в main.go:
+package main
+
+import (
+    "myproject/pkg/stack"
+    "myproject/pkg/queue"
+    "myproject/pkg/linkedlist"
+)
+
+func main() {
+    // Пример использования дженерик-стека
+    intStack := stack.NewStack[int]()
+    intStack.Push(1)
+    intStack.Push(2)
+    println(intStack.Pop()) // Выведет 2
+
+    // Пример с очередью строк
+    stringQueue := queue.NewQueue[string]()
+    stringQueue.Enqueue("hello")
+    stringQueue.Enqueue("world")
+    println(stringQueue.Dequeue()) // Выведет "hello"
+
+    // Пример со списком
+    list := linkedlist.LinkedList[string]{}
+    list.Append("first")
+    list.Append("second")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
