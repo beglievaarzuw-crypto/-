@@ -1,0 +1,123 @@
+а) Стек (Stack)
+type Stack []int
+
+func (s *Stack) Push(v int) { *s = append(*s, v) }
+func (s *Stack) Pop() int {
+    if len(*s) == 0 {
+        panic("Stack is empty")
+    }
+    res := (*s)[len(*s)-1]
+    *s = (*s)[:len(*s)-1]
+    return res
+}
+func (s *Stack) Peek() int { return (*s)[len(*s)-1] }
+func (s *Stack) IsEmpty() bool { return len(*s) == 0 }
+
+б) Очередь (Queue)
+type Queue []int
+
+func (q *Queue) Enqueue(v int) { *q = append(*q, v) }
+func (q *Queue) Dequeue() int {
+    if len(*q) == 0 {
+        panic("Queue is empty")
+    }
+    res := (*q)
+    *q = (*q)[1:]
+    return res
+}
+func (q *Queue) Front() int { return (*q) }
+func (q *Queue) IsEmpty() bool { return len(*q) == 0 }
+
+в) Односвязный список (Singly Linked List)
+type Node struct {
+    Data int
+    Next *Node
+}
+
+type LinkedList struct {
+    Head *Node
+}
+
+func (l *LinkedList) Append(data int) {
+    newNode := &Node{Data: data}
+    if l.Head == nil {
+        l.Head = newNode
+        return
+    }
+    current := l.Head
+    for current.Next != nil {
+        current = current.Next
+    }
+    current.Next = newNode
+}
+
+func (l *LinkedList) Display() {
+    current := l.Head
+    for current != nil {
+        println(current.Data)
+        current = current.Next
+    }
+}
+
+2. Сделать конвертер из римских цифр в арабские
+func romanToArabic(roman string) int {
+    romanValues := map[rune]int{
+        'I': 1, 'V': 5, 'X': 10, 'L': 50,
+        'C': 100, 'D': 500, 'M': 1000,
+    }
+    result := 0
+    prevValue := 0
+
+    for i := len(roman) - 1; i >= 0; i-- {
+        value := romanValues[rune(roman[i])]
+        if value < prevValue {
+            result -= value
+        } else {
+            result += value
+        }
+        prevValue = value
+    }
+    return result
+}
+
+3. Заполнить двумерный массив случайными уникальными числами
+import (
+    "math/rand"
+    "time"
+)
+
+func fillUnique2DArray(rows, cols int) [][]int {
+    rand.Seed(time.Now().UnixNano())
+    uniqueNumbers := make(map[int]bool)
+    array := make([][]int, rows)
+
+    for i := range array {
+        array[i] = make([]int, cols)
+    }
+
+    for i := 0; i < rows; i++ {
+        for j := 0; j < cols; j++ {
+            num := rand.Intn(100) + 1 // Генерируем число от 1 до 100
+            for uniqueNumbers[num] {
+                num = rand.Intn(100) + 1 // Если число уже есть, генерируем новое
+            }
+            uniqueNumbers[num] = true
+            array[i][j] = num
+        }
+    }
+    return array
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
