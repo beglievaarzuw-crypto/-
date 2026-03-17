@@ -1,4 +1,5 @@
 а) Стек (Stack)
+Стек работает по принципу LIFO (Last In First Out). Реализуем с помощью среза:
 type Stack []int
 
 func (s *Stack) Push(v int) { *s = append(*s, v) }
@@ -13,7 +14,9 @@ func (s *Stack) Pop() int {
 func (s *Stack) Peek() int { return (*s)[len(*s)-1] }
 func (s *Stack) IsEmpty() bool { return len(*s) == 0 }
 
+
 б) Очередь (Queue)
+Очередь работает по принципу FIFO (First In First Out):
 type Queue []int
 
 func (q *Queue) Enqueue(v int) { *q = append(*q, v) }
@@ -27,6 +30,7 @@ func (q *Queue) Dequeue() int {
 }
 func (q *Queue) Front() int { return (*q) }
 func (q *Queue) IsEmpty() bool { return len(*q) == 0 }
+
 
 в) Односвязный список (Singly Linked List)
 type Node struct {
@@ -59,7 +63,9 @@ func (l *LinkedList) Display() {
     }
 }
 
+
 2. Сделать конвертер из римских цифр в арабские
+Создадим функцию для конвертации:
 func romanToArabic(roman string) int {
     romanValues := map[rune]int{
         'I': 1, 'V': 5, 'X': 10, 'L': 50,
@@ -80,7 +86,9 @@ func romanToArabic(roman string) int {
     return result
 }
 
+
 3. Заполнить двумерный массив случайными уникальными числами
+Используем пакет math/rand для генерации уникальных чисел:
 import (
     "math/rand"
     "time"
